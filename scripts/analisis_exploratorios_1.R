@@ -18,11 +18,11 @@ library(janitor)
 # y 2005 (por ejemplo, para ver a ojo si hay algo de diferencia).
 
 # Cargar datos 2005, tanso censo aéreo como terrestre:
-terrestrial_counts_2005 <- read_csv("data/2005_whole_year/terrestrial_counts_data.csv")
-aerial_counts_2005 <- read_csv("data/2005_whole_year/aerial_counts_data.csv")
+terrestrial_counts_2005 <- read_csv("data/old/2005_whole_year/terrestrial_counts_data.csv")
+aerial_counts_2005 <- read_csv("data/old/2005_whole_year/aerial_counts_data.csv")
 
-terrestrial_counts_2025 <- read_csv("data/2025_whole_year/terrestrial_counts_data.csv")
-aerial_counts_2025 <- read_csv("data/2025_whole_year/aerial_counts_data.csv")
+terrestrial_counts_2025 <- read_csv("data/old/2025_whole_year/terrestrial_counts_data.csv")
+aerial_counts_2025 <- read_csv("data/old/2025_whole_year/aerial_counts_data.csv")
 
 # Estandarizar nombres de variables con janitor
 terrestrial_counts_2005 <- clean_names(terrestrial_counts_2005)
@@ -35,9 +35,9 @@ aerial_counts_2025 <- clean_names(aerial_counts_2025)
 # CENSOS TERRESTRES
 # 1. Desglosar código del censo en año y mes:
 
-unique(terrestrial_counts_2005$Censo) #Para ver que el formato del código de censo
-unique(terrestrial_counts_2025$Censo) # es siempre igual. Lo es, incluso en los de 2025
-unique(aerial_counts_2025$Fecha) #Hubo censos en enero, febrero, marzo, noviembre y diciembre
+unique(terrestrial_counts_2005$censo) #Para ver que el formato del código de censo
+unique(terrestrial_counts_2025$censo) # es siempre igual. Lo es, incluso en los de 2025
+unique(aerial_counts_2025$fecha) #Hubo censos en enero, febrero, marzo, noviembre y diciembre
 unique(aerial_counts_2005$fecha) #Aquí los hubo en julio, agosto, septiembre, octubre, noviembre y diciembre.
 
 terrestrial_counts_2005 <- terrestrial_counts_2005 |> 
@@ -68,7 +68,7 @@ sp_terr_2005 <- terrestrial_counts_2005 |>
   summarize(n = sum(cantidad)) |> 
   filter(n > 100)
 
-sp_terr_2025 <- terrestrial_counts_2025 |> 
+sp_terr_2025 <- terrestrial_counts_2025|> 
   filter(month %in% c(11, 12)) |> 
   filter(!str_detect(especie, "Falco|Circus|Circaetus|Buteo|Accipiter|Corvus")) |> 
   group_by(especie) |> 

@@ -19,7 +19,7 @@ raw_2005_2025_aero <- clean_names(raw_2005_2025_aero)
 winter_monthly_aero <- raw_2005_2025_aero  |> 
   filter(mes %in% c(11, 12, 1))  |> 
   mutate(
-    invernada = ifelse(mes %in% c(11, 12), ano + 1, ano)
+    invernada = ifelse(mes %in% c(11, 12), ano + 1, ano) #Invernada se refiere a ano
   )  |> 
   group_by(especie, invernada, mes)  |> 
   summarise(
@@ -47,7 +47,7 @@ winter_summary_aero_filter <- winter_summary_aero %>%
 
 # Qué especies nos quedamos en cómputo general con censos aéreos.
 lista_aero_full <- sort(unique(winter_summary_aero_filter$especie))
-
+lista_aero_full #37 spp
 
 #--------------------------------------------------------------------------------
 # Hacemos lo mismo con censos terrestres para ver la diferencia:
@@ -99,7 +99,7 @@ winter_summary_terr_filter <- winter_summary_terr %>%
 
 # Qué especies nos quedamos en cómputo general con censos aéreos.
 lista_terr_full <- sort(unique(winter_summary_terr_filter$especie))
-
+lista_terr_full #70 spp
 #---------------------------------------------------------------------------------
 # Ahora unimos las listas. Primero pasar a data frame:
 df_terr <- data.frame(sp_terr = lista_terr_full, stringsAsFactors = FALSE)
