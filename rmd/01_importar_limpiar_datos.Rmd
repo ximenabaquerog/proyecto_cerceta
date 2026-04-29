@@ -1,0 +1,159 @@
+---
+title: Tendencias poblacionales de las aves acuáticas invernantes en el Espacio Natural de Doñana
+author: "Carlos Guzón"
+date: "2026-02-23"
+colorlinks: true
+urlcolor: blue
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 2
+    number_sections: true
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,       
+  results = 'hide',  
+  message = FALSE   
+)
+```
+
+Descargamos datos de censos mensuales de aves acuáticas desde el año hidrológico 2005-2006 hasta el 2025-2026, desde la web del ICTS de la Estación Biológica de Doñana ([disponible aquí](https://censos-aereos.icts.ebd.csic.es/)).
+
+# IMPORTAR DATOS
+
+```{r}
+library(readr)
+
+localities <- read_csv("data/2005_2026_series/terrestrial_counts_localties.csv")
+counts_data <- read_csv("data/2005_2026_series/terrestrial_counts_data.csv")
+
+```
+
+# FILTRAR LOCALIDADES
+
+La serie temporal completa está compuesta por un total de 63 censos que abarcan 128 localidades diferentes (se muestra un resumen):
+
+```{r echo = FALSE, results = TRUE, warning= FALSE}
+summary_local  <- matrix(unique(counts_data$`Localidad nivel 4`), 
+                         ncol = 6) 
+summary_local |> 
+  head() |> 
+  knitr::kable()
+```
+
+Son más que las 87 localidades descritas en la metodología de censo terrestre. Esto se debe a que algunos años se censan parcelas extra, sobre todo ciertos arrozales que en ocasiones llegan a alcanzar grandes concentraciones de aves.
+
+Solamente consideraremos en nuestro análisis aquellas parcelas que hayan sido muestreadas en al menos un 50% de los censos para nuestra serie temporal:
+
+```{r}
+library(tidyverse)
+
+# Extraemos año y mes de cada censo a partir del código de censo:
+counts_data <- counts_data  |> 
+  mutate(
+    date = ym(str_remove(Censo, "CT_")), 
+    year = year(date),
+    month = month(date)
+    ) |> 
+  relocate(date, year, month, .after = Censo) |> 
+  select(-date) 
+
+# Filtramos los censos de los meses invernales y eliminamos variables innecesarias.
+counts_filtered <- counts_data |>
+  filter(month %in% c(1, 11, 12)) |>
+  mutate(total_counts = n_distinct(Censo)) |>
+  select(-`Localidad nivel 1`, -`Localidad nivel 2`, 
+         -`Localidad nivel 3`, -Observaciones)
+
+# Calculamos el porcentaje de aparición de cada parcela para los censos invernales 
+# durante nuestro período de estudio. 
+locality_presence <- counts_filtered |> 
+  group_by(`Localidad nivel 4`) |>
+  summarize(
+    total_counts = first(total_counts),
+    locality_counts = n_distinct(Censo)
+  ) |>
+  mutate(proportion = locality_counts / total_counts) |> 
+  arrange(desc(proportion)) |> 
+  filter(proportion >= 0.5)
+```
+
+```{r resumen, echo = FALSE}
+# Tabla resumen de los censos en los que aparece cada parcela, para consultar manualmente si hiciese falta. 
+counts_filtered |>
+  distinct(`Localidad nivel 4`, Censo) |> 
+  mutate(present = 1) |>  
+  pivot_wider(
+    names_from = Censo,
+    values_from = present,
+    values_fill = 0
+    ) |> 
+  mutate(present_in = rowSums(across(where(is.numeric)))) |> 
+  arrange(desc(present_in)) |> 
+  relocate(present_in, .after = `Localidad nivel 4`)
+```
+
+# TABLA DE ABUNDANCIAS POR ESPECIE Y AÑO HIDROLÓGICO
+
+Ahora creamos una tabla con las respectivas abundancias de cada especie, en cada localidad y cada año, que será la base de los análisis de tendencia que llevaremos a cabo para el trabajo final de la asignatura.
+
+```{r}
+species_abundance_yearly <- counts_filtered |>
+  mutate(
+    hydro_year = if_else(month %in% c(11, 12), year, year - 1)
+  ) |>
+  group_by(hydro_year, Especie, `Localidad nivel 4`) |>
+  summarize(
+    max_abundance = max(Cantidad, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+write.csv(species_abundance_yearly, "outputs/species_abundance_yearly.csv", row.names = FALSE)
+```
+
+# GRÁFICA EJEMPLO
+
+Finalmente elaboraremos una sencilla gráfica comparativa de la evolución de la población invernante de 2 especies ecológicamente muy distintas: un ave limícola residente de gran tamaño, el flamenco rosa, y una pequeña anátida estrictamente invernante, la cerceta común.
+
+Para este ejemplo utilizaremos solamente el valor máximo de abundancia invernal anual para cada especie, una métrica habitual en estudios sobre aves invernantes como proxy de la abundancia total de cada especie en sistemas acuáticos complejos, donde hay intercambio diario de individuos entre localidades.
+
+```{r echo=FALSE}
+# Calculamos un máximo invernal para cada especie (simplificado desde de Felipe 
+# et al., 2024):
+max_winter_abund <- species_abundance_yearly |>
+  group_by(hydro_year, Especie) |>
+  summarize(winter_max = max(max_abundance, na.rm = TRUE), .groups = "drop") 
+
+# Extraemos nuestras 2 especies y las representamos en un gráfico:
+max_winter_abund |> 
+  filter(Especie %in% c("Phoenicopterus roseus", "Anas crecca")) |> 
+  ggplot(aes(x = hydro_year, y = winter_max, color = Especie)) +
+  geom_line(linewidth = 1.5) +
+  geom_point(size = 3) +
+  labs(
+    title = "Invernada de flamenco y cerceta común en las marismas del Guadalquivir\n(2005-2025)",
+    x = "Año hidrológico",
+    y = "Abundancia máxima",
+    color = NULL                                   
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(
+      face = "bold", 
+      size = 11,
+      hjust = 0.5),
+    axis.title.y = element_text(margin = margin(r = 12)),
+    axis.title.x = element_text(margin = margin(t = 10)),
+    legend.position = "top",
+    legend.justification = "center",
+    legend.text = element_text(face = "italic"),
+    panel.grid.minor = element_blank(),           
+    panel.grid.major.x = element_blank(),          
+    plot.margin = margin(15, 15, 15, 15)
+  )
+```
+
+\* En los análisis de tendencias para el trabajo final de la asignatura exploraremos otras métricas de abundancia, que reflejen mejor la variabilidad presente en los datos.

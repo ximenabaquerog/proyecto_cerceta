@@ -1,0 +1,77 @@
+sp_terr,sp_aero,n_reprod
+Alca torda,NA,0
+Anas acuta,Anas acuta,50
+Anas crecca,Anas crecca,200
+Anas platyrhynchos,Anas platyrhynchos,170.000
+Anser anser,Anser anser,68
+Ardea alba,Ardea alba,300
+Ardea cinerea,Ardea cinerea,13988
+Aythya ferina,Aythya ferina,16600
+Bubulcus ibis,NA,80114
+Burhinus oedicnemus,NA,NA
+Calidris alba,NA,0
+Calidris alpina,NA,0
+Calidris canutus,NA,0
+Calidris ferruginea,NA,0
+Calidris minuta,NA,0
+Calidris pugnax,Calidris pugnax,0
+Charadrius alexandrinus,NA,6624
+Charadrius dubius,NA,66100
+Charadrius hiaticula,NA,NA
+Chroicocephalus genei,NA,NA
+Chroicocephalus ridibundus,Chroicocephalus ridibundus,18296
+Ciconia ciconia,Ciconia ciconia,NA
+Ciconia nigra,NA,NA
+Circus aeruginosus,NA,NA
+Columba palumbus,NA,NA
+Egretta garzetta,NA,18694
+Falco tinnunculus,NA,NA
+Fulica atra,Fulica atra,NA
+Gallinago gallinago,NA,NA
+Gallinula chloropus,NA,NA
+Grus grus,Grus grus,NA
+Haematopus ostralegus,NA,NA
+Himantopus himantopus,Himantopus himantopus,NA
+Larus audouinii,NA,NA
+Larus fuscus,Larus fuscus,390
+Larus melanocephalus,NA,NA
+Larus michahellis,NA,NA
+Limosa lapponica,NA,NA
+Limosa limosa,Limosa limosa,NA
+Mareca penelope,Mareca penelope,NA
+Mareca strepera,Mareca strepera,NA
+Marmaronetta angustirostris,NA,NA
+Melanitta nigra,NA,NA
+Netta rufina,Netta rufina,NA
+Numenius arquata,NA,NA
+Nycticorax nycticorax,NA,NA
+Oxyura leucocephala,NA,NA
+Phalacrocorax carbo,Phalacrocorax carbo,NA
+Phoenicopterus roseus,Phoenicopterus roseus,NA
+Platalea leucorodia,Platalea leucorodia,NA
+Plegadis falcinellus,Plegadis falcinellus,NA
+Pluvialis apricaria,Pluvialis apricaria,NA
+Pluvialis squatarola,Pluvialis squatarola,NA
+Podiceps cristatus,NA,NA
+Podiceps nigricollis,Podiceps nigricollis,NA
+Porphyrio porphyrio,Porphyrio porphyrio,NA
+Pterocles alchata,NA,NA
+Puffinus mauretanicus,NA,NA
+Recurvirostra avosetta,Recurvirostra avosetta,NA
+Spatula clypeata,Spatula clypeata,NA
+Spatula querquedula,Spatula querquedula,NA
+Sterna hirundo,NA,NA
+Tachybaptus ruficollis,NA,NA
+Tadorna tadorna,Tadorna tadorna,NA
+Thalasseus sandvicensis,NA,NA
+Tringa erythropus,NA,NA
+Tringa nebularia,NA,NA
+Tringa ochropus,NA,NA
+Tringa totanus,NA,NA
+Vanellus vanellus,Vanellus vanellus,NA
+NA,Anatidae spp.,NA
+NA,Bubulcus/Egretta,NA
+NA,Charadrius spp./Calidris spp.,NA
+NA,Chroicocephalus genei/ridibundus,NA
+NA,Larus michahellis/fuscus,NA
+NA,Tringa totanus/erythropus,NA
