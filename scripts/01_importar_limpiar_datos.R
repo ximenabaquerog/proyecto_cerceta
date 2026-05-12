@@ -53,6 +53,7 @@ counts_aligned <- counts_clean |>
 # 5. Filtro de Representatividad Histórica (Umbral 80%) -------------------------
 # Para evitar sesgos por falta de datos, solo seleccionamos parcelas que hayan sido censadas en al menos el 50% de los años del periodo 2005-2025 (16 de 20 años).
 parcelas_validas <- counts_aligned |> 
+  filter(!is.na(`parcelas protocolo`)) |> 
   group_by(`parcelas protocolo`) |> 
   summarize(n_anios = n_distinct(hydro_year)) |> 
   filter(n_anios >= 10) |>   #para cumplir el 50%
